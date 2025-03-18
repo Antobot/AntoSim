@@ -1,0 +1,194 @@
+<?xml version='1.0'?>
+<sdf version='1.8'>
+  <world name='lboro_nfl'>
+
+    <!-- Plugins -->
+    <plugin
+      filename="ignition-gazebo-physics-system"
+      name="ignition::gazebo::systems::Physics">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-sensors-system"
+      name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-scene-broadcaster-system"
+      name="ignition::gazebo::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="ignition-gazebo-user-commands-system"
+      name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="BasicSystem"
+      name="antobot_sim_gazebo::BasicSystem">
+    </plugin>
+    <plugin
+      filename="FullSystem"
+      name="antobot_sim_gazebo::FullSystem">
+    </plugin>
+
+
+    <!-- Not yet working plugins -->
+   <plugin
+      filename="ignition-gazebo-imu-system"
+      name="ignition::gazebo::systems::Imu">
+    </plugin>
+   <plugin
+      filename="ignition-gazebo-navsat-system"
+      name="ignition::gazebo::systems::NavSat">
+    </plugin>
+
+    <physics type='ode'>
+      <max_step_size>0.003</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.81</gravity>
+    </physics>
+
+
+    <light name='sun' type='directional'>
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>1.0 1.0 1.0 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1.0</direction>
+    </light>
+
+  
+    <scene>
+      <ambient>1 1 1 1</ambient>
+      <background>0.3 0.7 0.9 1</background>
+      <shadows>0</shadows>
+      <grid>false</grid>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
+      <shadows>1</shadows>
+    </scene>
+
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>52.75962493788336</latitude_deg>
+      <longitude_deg>-1.2413751424533903</longitude_deg>
+      <elevation>67</elevation>
+      <heading_deg>103.261</heading_deg>
+    </spherical_coordinates>
+
+    <model name='terrain'>
+      <pose>0 0 0 0 0 3.14159</pose>
+      <static>true</static>
+      <link name='terrain'>
+        <collision name='terrain_collision'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/terrain.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='terrain_visual'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/terrain.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+
+    <model name='raised_bed'>
+      <pose>0 0 0 0 0 3.14159</pose>
+      <static>true</static>
+      <link name='raised_bed'>
+        <collision name='raised_bed_collision'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/raised_bed.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='raised_bed_visual'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/raised_bed.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name='polytunnel_plastic'>
+      <pose>0 0 0 0 0 3.14159</pose>
+      <static>true</static>
+      <link name='polytunnel_plastic'>
+        <collision name='polytunnel_plastic_collision'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/polytunnel_plastic.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='polytunnel_plastic_visual'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/polytunnel_plastic.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name='polytunnel_framework'>
+      <pose>0 0 0 0 0 3.14159</pose>
+      <static>true</static>
+      <link name='polytunnel_framework'>
+        <collision name='polytunnel_framework_collision'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/polytunnel_framework.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name='polytunnel_framework_visual'>
+          <geometry>
+            <mesh>
+              <uri>
+                model://lboro_nfl/polytunnel_framework.dae
+              </uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    
+    
+
+
+
+  </world>
+</sdf>
