@@ -94,7 +94,7 @@ Visualization Manager:
         Inertia: false
         Mass: false
       Name: RobotModel
-      TF Prefix: diff_drive
+
       Update Interval: 0
       Value: true
       Visual Enabled: true
@@ -174,7 +174,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: diff_drive/odom
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:

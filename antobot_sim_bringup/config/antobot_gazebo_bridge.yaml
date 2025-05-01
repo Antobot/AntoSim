@@ -14,8 +14,13 @@
   ros_type_name: "nav_msgs/msg/Odometry"
   gz_type_name: "gz.msgs.Odometry"
   direction: GZ_TO_ROS
-- ros_topic_name: "/antobot_ant/scan"
-  gz_topic_name: "/scan"
+- ros_topic_name: "/antobot_ant/scan/back"
+  gz_topic_name: "/antobot_ant/scan/back"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS
+- ros_topic_name: "/antobot_ant/scan/front"
+  gz_topic_name: "/antobot_ant/scan/front"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
@@ -33,5 +38,9 @@
   gz_topic_name: "/model/antobot_ant/pose_static"
   ros_type_name: "tf2_msgs/msg/TFMessage"
   gz_type_name: "gz.msgs.Pose_V"
+  direction: GZ_TO_ROS
+- topic: /gps/fix
+  type: sensor_msgs/msg/NavSatFix
+  gz_type: gz.msgs.NavSat
   direction: GZ_TO_ROS
 
