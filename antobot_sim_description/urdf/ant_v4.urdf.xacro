@@ -102,39 +102,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <!--
-    <gazebo>
-      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>/</robotNamespace>
-      </plugin>
-    </gazebo>
-
-    <gazebo>
-    <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
-      <alwaysOn>true</alwaysOn>
-      <updateRate>10.0</updateRate>
-      <bodyName>base_link</bodyName>
-      <topicName>ground_truth/state</topicName>
-      <gaussianNoise>0.0</gaussianNoise>
-      <frameName>world</frameName>
-      <xyzOffset>0 0 0</xyzOffset>
-      <rpyOffset>0 0 0</rpyOffset>
-    </plugin>
-    </gazebo>
-    -->
-
     <xacro:property name="role" value="${mp['robot_role']}" />
     
     <xacro:if value="${role == 'UV'}">
@@ -206,26 +173,27 @@
       </inertial>	
     </link>
 
-    <!--
-    <gazebo>
-      <plugin name="gazebo_ros_gps" filename="libhector_gazebo_ros_gps.so" >
-        <updateRate>4.0</updateRate>
-        <bodyName>robot_base_link</bodyName> 
-        <frameId>robot_base_link</frameId>
-        <topicName>/antobot_gps</topicName>
-        <velocityTopicName>/am_gps_vel</velocityTopicName>
-        <referenceLatitude>${referenceLatitude}</referenceLatitude>
-        <referenceLongitude>${referenceLongitude}</referenceLongitude>
-        <referenceHeading>${referenceHeading}</referenceHeading>
-        <referenceAltitude>10</referenceAltitude>
-        <offset>0 0 0</offset>
-        <drift>0.0 0.0 0.0</drift>
-        <gaussianNoise>0.01 0.01 0.01</gaussianNoise>
-        <velocityDrift>0 0 0</velocityDrift>
-        <velocityGaussianNoise>0.5 0.5 0.5</velocityGaussianNoise>
-      </plugin>
+    <gazebo reference="gps_frame">
+      <sensor name="gps_sensor" type="gps">
+        <pose>0 0 1 0 0 0</pose> <!-- adjust height as needed -->
+        <gps>
+          <horizontal_position_accuracy>1.0</horizontal_position_accuracy>
+          <vertical_position_accuracy>1.5</vertical_position_accuracy>
+          <position_sensing>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.5</stddev>
+            </noise>
+          </position_sensing>
+        </gps>
+        <plugin name="ignition::gazebo::systems::NavSat"
+                filename="ignition-gazebo-navsat-system">
+          <topic>/gps/fix</topic>
+          <frame_id>gps_frame</frame_id>
+        </plugin>
+      </sensor>
     </gazebo>
-    -->
+
   
 
     <!-- imu -->
