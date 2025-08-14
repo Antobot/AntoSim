@@ -63,7 +63,7 @@ def generate_launch_description():
     #parseAntobotLaunch = PathJoinSubstitution([pkg_antobot_sim_bringup, 'launch', 'parseAntobot.launch.py'])
     #antobotParse = IncludeLaunchDescription(PythonLaunchDescriptionSource([parseAntobotLaunch]))
 
-    pkg_antobot_sim_description = get_package_share_directory('antobot_sim_description')
+    pkg_antobot_sim_description = get_package_share_directory('antobot_description')
 
 
     # Locate your Xacro file
