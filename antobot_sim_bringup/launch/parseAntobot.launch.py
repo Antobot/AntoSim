@@ -7,7 +7,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     # Locate your Xacro file
     xacro_file = os.path.join(
-        get_package_share_directory('antobot_sim_description'),
+        get_package_share_directory('antobot_description'),
         'urdf',
         'ant_v4.urdf.xacro'
     )
