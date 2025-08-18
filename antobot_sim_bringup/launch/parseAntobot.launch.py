@@ -17,8 +17,10 @@ def generate_launch_description():
         robot_platform = data['robot_platform']
         if robot_platform == "ant":
             model_xacro = 'ant_v4.urdf.xacro'
+            starting_height = '0.3'
         elif robot_platform == "allWheel":
             model_xacro = 'allWheel.urdf.xacro'
+            starting_height = '1.5'
     
     # Locate your Xacro file
     xacro_file = os.path.join(pkg_antobot_description,'urdf', model_xacro)
@@ -33,7 +35,7 @@ def generate_launch_description():
                     '-name', 'antobot_ant',
                     '-topic', 'robot_description',
                     '-x', '0.0',
-                    '-z', '0.3',
+                    '-z', starting_height,
                     '-y', '0.0',
                     ],
                 output='screen'),

@@ -7,7 +7,7 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, GroupAction
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -42,6 +42,63 @@ def gazebo_launch(context, *args, **kwargs):
 
 
 ########################################################################
+
+def launch_controller_nodes(context, *args, **kwargs):
+    # Controllers
+    controller_nodes = [
+        # jointbroadcaster
+        ExecuteProcess(
+            cmd=[
+                'ros2', 'run', 'controller_manager', 'spawner',
+                'antobot_joint_state_publisher',
+                '-c', '/controller_manager'
+            ],
+            output='screen'
+        ),
+        ExecuteProcess(
+            cmd=[
+                'ros2', 'run', 'controller_manager', 'spawner',
+                'wheel_velocity_pid_controller', '-c', '/controller_manager'
+            ],
+            output='screen'
+        ),
+        ExecuteProcess(
+            cmd=[
+                'ros2', 'run', 'controller_manager', 'spawner',
+                'steering_position_pid_controller', '-c', '/controller_manager'
+            ],
+            output='screen'
+        ),
+        ExecuteProcess(
+            cmd=[
+                'ros2', 'run', 'controller_manager', 'spawner',
+                'suspension_position_pid_controller', '-c', '/controller_manager'
+            ],
+            output='screen'
+        )
+    ]
+
+    return controller_nodes
+
+
+def launch_control_nodes(context, *args, **kwargs):
+    control_nodes = [        
+        Node(
+            package='antobot_description',
+            executable='steering_state_bridge.py',
+            name='steering_state_bridge',
+            output='screen'
+        ),
+        # Teleop Python node
+        Node(
+            package='antobot_description',
+            executable='teleop.py',
+            name='teleop',
+            output='screen'
+        )
+    ]
+
+    return control_nodes
 
 
 
@@ -130,7 +187,11 @@ def generate_launch_description():
     )
 
         
+    parseAntobotLaunch = PathJoinSubstitution([pkg_antobot_sim_bringup, 'launch', 'parseAntobot.launch.py'])
 
+    antobotParse = IncludeLaunchDescription(PythonLaunchDescriptionSource([parseAntobotLaunch]))
+
+    ld.add_action(antobotParse)
 
 
     ld.add_action(DeclareLaunchArgument('use_sim_time', default_value='true',choices=['true', 'false'],description='use_sim_time'))
@@ -140,11 +201,11 @@ def generate_launch_description():
     ld.add_action(DeclareLaunchArgument('rviz', default_value='true',description='Open RViz.'))
     ld.add_action(rviz)
 
-    parseAntobotLaunch = PathJoinSubstitution([pkg_antobot_sim_bringup, 'launch', 'parseAntobot.launch.py'])
+    if robot_platform == "allWheel":
+        ld.add_action(OpaqueFunction(function=launch_controller_nodes))
+        # ld.add_action(OpaqueFunction(function=launch_control_nodes))
 
-    antobotParse = IncludeLaunchDescription(PythonLaunchDescriptionSource([parseAntobotLaunch]))
-
-    ld.add_action(antobotParse)
+   
 
 
     return ld
