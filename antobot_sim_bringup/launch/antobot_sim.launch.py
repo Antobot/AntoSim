@@ -1,6 +1,8 @@
 import os
 import xacro
 
+import yaml
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -63,11 +65,20 @@ def generate_launch_description():
     #parseAntobotLaunch = PathJoinSubstitution([pkg_antobot_sim_bringup, 'launch', 'parseAntobot.launch.py'])
     #antobotParse = IncludeLaunchDescription(PythonLaunchDescriptionSource([parseAntobotLaunch]))
 
-    pkg_antobot_sim_description = get_package_share_directory('antobot_description')
+    pkg_antobot_description = get_package_share_directory('antobot_description')
+    platform_config_path = str(pkg_antobot_description) + "/config/platform_config.yaml"
 
+    with open(platform_config_path, 'r') as yamlfile:
+        data = yaml.safe_load(yamlfile)
+
+        robot_platform = data['robot_platform']
+        if robot_platform == "ant":
+            model_xacro = 'ant_v4.urdf.xacro'
+        elif robot_platform == "allWheel":
+            model_xacro = 'allWheel.urdf.xacro'
 
     # Locate your Xacro file
-    xacro_file = os.path.join(pkg_antobot_sim_description,'urdf','ant_v4.urdf.xacro')
+    xacro_file = os.path.join(pkg_antobot_description,'urdf', model_xacro)
 
     # Process Xacro to URDF
     doc = xacro.process_file(xacro_file)
@@ -85,26 +96,27 @@ def generate_launch_description():
         ]
     )
 
-
-
-
-
-
     # Load the SDF file from "description" package
     #sdf_file  =  os.path.join(pkg_antobot_sim_description, 'models', 'diff_drive', 'model.sdf')
     #with open(sdf_file, 'r') as infp:
     #    robot_desc = infp.read()
 
+    if robot_platform == "ant":
+        # Visualize in RViz
+        rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', os.path.join(pkg_antobot_sim_bringup, 'config', 'diff_drive.rviz')],
+        condition=IfCondition(LaunchConfiguration('rviz'))
+        )
+    elif robot_platform == "allWheel":
+        rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=['-d', os.path.join(pkg_antobot_description, 'config', 'allWheel_sensors.rviz')],
+        condition=IfCondition(LaunchConfiguration('rviz'))
+        )
 
-
-
-    # Visualize in RViz
-    rviz = Node(
-       package='rviz2',
-       executable='rviz2',
-       arguments=['-d', os.path.join(pkg_antobot_sim_bringup, 'config', 'diff_drive.rviz')],
-       condition=IfCondition(LaunchConfiguration('rviz'))
-    )
 
     # Bridge ROS topics and Gazebo messages for establishing communication
     bridge = Node(
@@ -127,8 +139,6 @@ def generate_launch_description():
     ld.add_action(bridge)
     ld.add_action(DeclareLaunchArgument('rviz', default_value='true',description='Open RViz.'))
     ld.add_action(rviz)
-
-
 
     parseAntobotLaunch = PathJoinSubstitution([pkg_antobot_sim_bringup, 'launch', 'parseAntobot.launch.py'])
 
