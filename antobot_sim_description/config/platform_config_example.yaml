@@ -19,6 +19,7 @@ robot_version: 4
 robot_role: "Assist"
 
 pathFollower: True
+location: "uk"
 
 
 ## Sensor information
