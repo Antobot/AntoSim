@@ -11,7 +11,7 @@ from launch.actions import IncludeLaunchDescription, ExecuteProcess
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-
+from launch.actions import TimerAction
 from launch_ros.actions import Node
 
 
@@ -30,11 +30,14 @@ def gazebo_launch(context, *args, **kwargs):
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')),
-        launch_arguments={'gz_args': PathJoinSubstitution([
-            pkg_antobot_sim_gazebo,
-            'worlds',
-            'lboro_nfl.sdf'
-        ])}.items(),
+        launch_arguments={
+            'gz_args': ' '.join([
+                os.path.join(pkg_antobot_sim_gazebo, 'worlds', 'lboro_nfl.sdf'),
+                '-r',
+                '-v 0'
+            ])
+        }.items(),
+
     )
 
     return [gz_sim]
@@ -92,7 +95,7 @@ def launch_control_nodes(context, *args, **kwargs):
         # Teleop Python node
         Node(
             package='antobot_description',
-            executable='teleop.py',
+            executable='fourWheelTeleop.py',
             name='teleop',
             output='screen'
         )
@@ -166,6 +169,17 @@ def generate_launch_description():
         arguments=['-d', os.path.join(pkg_antobot_description, 'config', 'diff_drive.rviz')],
         condition=IfCondition(LaunchConfiguration('rviz'))
         )
+        # Bridge ROS topics and Gazebo messages for establishing communication
+        bridge = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            parameters=[{
+                'config_file': os.path.join(pkg_antobot_sim_bringup, 'config', 'antobot_gazebo_bridge.yaml'),
+                'qos_overrides./tf_static.publisher.durability': 'transient_local',
+            }],
+            output='screen',
+        )
+
     elif robot_platform == "allWheel":
         rviz = Node(
         package='rviz2',
@@ -173,18 +187,17 @@ def generate_launch_description():
         arguments=['-d', os.path.join(pkg_antobot_description, 'config', 'allWheel_sensors.rviz')],
         condition=IfCondition(LaunchConfiguration('rviz'))
         )
+        # Bridge ROS topics and Gazebo messages for establishing communication
+        bridge = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            parameters=[{
+                'config_file': os.path.join(pkg_antobot_sim_bringup, 'config', 'allWheel_gazebo_bridge.yaml'),
+                'qos_overrides./tf_static.publisher.durability': 'transient_local',
+            }],
+            output='screen',
+        )
 
-
-    # Bridge ROS topics and Gazebo messages for establishing communication
-    bridge = Node(
-        package='ros_gz_bridge',
-        executable='parameter_bridge',
-        parameters=[{
-            'config_file': os.path.join(pkg_antobot_sim_bringup, 'config', 'antobot_gazebo_bridge.yaml'),
-            'qos_overrides./tf_static.publisher.durability': 'transient_local',
-        }],
-        output='screen',
-    )
 
         
     parseAntobotLaunch = PathJoinSubstitution([pkg_antobot_sim_bringup, 'launch', 'parseAntobot.launch.py'])
@@ -203,7 +216,7 @@ def generate_launch_description():
 
     if robot_platform == "allWheel":
         ld.add_action(OpaqueFunction(function=launch_controller_nodes))
-        # ld.add_action(OpaqueFunction(function=launch_control_nodes))
+        ld.add_action(OpaqueFunction(function=launch_control_nodes))
 
    
 
