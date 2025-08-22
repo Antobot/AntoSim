@@ -215,7 +215,7 @@ def generate_launch_description():
     ld.add_action(rviz)
 
     if robot_platform == "allWheel":
-        ld.add_action(OpaqueFunction(function=launch_controller_nodes))
+        ld.add_action(TimerAction(period=6.0, actions=[OpaqueFunction(function=launch_controller_nodes)]))
         ld.add_action(OpaqueFunction(function=launch_control_nodes))
 
    
