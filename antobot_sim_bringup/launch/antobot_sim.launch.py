@@ -88,17 +88,38 @@ def launch_control_nodes(context, *args, **kwargs):
     control_nodes = [        
         Node(
             package='antobot_description',
-            executable='steering_state_bridge.py',
-            name='steering_state_bridge',
+            executable='steering_state_broadcaster.py',
+            name='steering_state_broadcaster',
             output='screen'
         ),
-        # Teleop Python node
+
         Node(
             package='antobot_description',
-            executable='fourWheelTeleop.py',
-            name='teleop',
+            executable='motor_observer.py',
+            name='motor_observer',
             output='screen'
-        )
+        ),
+        Node(
+            package='antobot_description',
+            executable='fourws_core.py',
+            name='fourws_core',
+            output='screen'
+        ),
+        Node(
+            package='antobot_description',
+            executable='JoystickTeleop.py',
+            name='JoystickTeleop',
+            output='screen'
+        ),
+
+        # Node(
+        #     package='antobot_description',
+        #     executable='fourWheelTeleop.py',
+        #     name='fourWheelTeleop',
+        #     output='screen'
+        # ),
+
+
     ]
 
     return control_nodes
@@ -215,10 +236,9 @@ def generate_launch_description():
     ld.add_action(rviz)
 
     if robot_platform == "allWheel":
-        ld.add_action(TimerAction(period=6.0, actions=[OpaqueFunction(function=launch_controller_nodes)]))
+        ld.add_action(TimerAction(period=8.0, actions=[OpaqueFunction(function=launch_controller_nodes)]))
         ld.add_action(OpaqueFunction(function=launch_control_nodes))
 
-   
 
 
     return ld
