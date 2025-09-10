@@ -24,6 +24,16 @@
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
+- ros_topic_name: "/antobot_ant/scan/back/points"
+  gz_topic_name: "/antobot_ant/scan/back/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS
+- ros_topic_name: "/antobot_ant/scan/front/points"
+  gz_topic_name: "/antobot_ant/scan/front/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS
 - ros_topic_name: "/joint_states"
   gz_topic_name: "/world/lboro_nfl/model/antobot_ant/joint_state"
   ros_type_name: "sensor_msgs/msg/JointState"
