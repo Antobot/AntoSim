@@ -37,6 +37,9 @@ def generate_launch_description():
                     '-x', '0.0',
                     '-z', starting_height,
                     '-y', '0.0',
+                    '-R', '0.0',
+                    '-P', '0.0',
+                    '-Y', '3.1416'
                     ],
                 output='screen'),
     ])
