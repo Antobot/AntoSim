@@ -14,23 +14,23 @@
   ros_type_name: "nav_msgs/msg/Odometry"
   gz_type_name: "gz.msgs.Odometry"
   direction: GZ_TO_ROS
-- ros_topic_name: "/antobot_ant/scan/back"
-  gz_topic_name: "/antobot_ant/scan/back"
+- ros_topic_name: "/lidar_200/scan"
+  gz_topic_name: "/lidar_200/scan"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
-- ros_topic_name: "/antobot_ant/scan/front"
-  gz_topic_name: "/antobot_ant/scan/front"
+- ros_topic_name: "/lidar_201/scan"
+  gz_topic_name: "/lidar_201/scan"
   ros_type_name: "sensor_msgs/msg/LaserScan"
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
-- ros_topic_name: "/antobot_ant/scan/front/points"
-  gz_topic_name: "/antobot_ant/scan/front/points"
+- ros_topic_name: "/lidar_200/pointcloud"
+  gz_topic_name: "/lidar_200/scan/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
-- ros_topic_name: "/antobot_ant/scan/back/points"
-  gz_topic_name: "/antobot_ant/scan/back/points"
+- ros_topic_name: "/lidar_201/pointcloud"
+  gz_topic_name: "/lidar_201/scan/points"
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "gz.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
