@@ -82,7 +82,7 @@
       <latitude_deg>52.75962493788336</latitude_deg>
       <longitude_deg>-1.2413751424533903</longitude_deg>
       <elevation>67</elevation>
-      <heading_deg>103.261</heading_deg>
+      <heading_deg>166.67</heading_deg>
     </spherical_coordinates>
 
     <model name='terrain'>

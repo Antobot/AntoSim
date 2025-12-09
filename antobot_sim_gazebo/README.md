@@ -36,3 +36,11 @@ See the comments in the source files for further documentation.
 ## `CMakeLists.txt`
 
 The provided `CMakeLists.txt` file contains comments that clarify the different sections and commands, and how to apply these to your project.
+
+# About the 'heading_deg' in gazebo world (spherical_coordinates)
+1. Got the real heading_deg from google map (using latitude and longitude).
+    - heading_deg_google is the heading degree in NED coordinate.
+2. Convert the heading_deg_google from NED to ENU.
+    - heading_deg_enu = 90 - heading_deg_google (-180° ~ 180°)
+3. Convert the heading_deg_enu to geographic coordinate.
+    - heading_deg_geo = 180 + heading_deg_enu (0° ~ 360°)

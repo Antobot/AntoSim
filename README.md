@@ -40,7 +40,7 @@ Designed for use with Gazebo Fortress (6.16) and ROS2 Humble.
 1. For teleop:
 
     ```bash
-        ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/antobot_ant/cmd_vel
+        ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r /cmd_vel:=/antobot/robot/cmd_vel
     ```
 
 
