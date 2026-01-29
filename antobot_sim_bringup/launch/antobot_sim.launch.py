@@ -127,9 +127,6 @@ def launch_control_nodes(context, *args, **kwargs):
 
 
 def dict_to_xacro_args(data_dict, prefix=""):
-    """
-    递归将嵌套字典转换为展平的xacro参数
-    """
     args = {}
     for key, value in data_dict.items():
         full_key = f"{prefix}{key}" if prefix else key
@@ -167,7 +164,9 @@ def generate_launch_description():
     pkg_antobot_description = get_package_share_directory('antobot_description')
     
     # Load configuration from database
-    data = get_robot_config("platform_config")
+    packagePath = get_package_share_directory('antobot_description')
+    platform_config_path = os.path.join(packagePath, 'config', 'platform_config.yaml')
+    data = get_robot_config("platform_config", platform_config_path)
 
     robot_platform = data['robot_platform']
     if robot_platform == "ant":
