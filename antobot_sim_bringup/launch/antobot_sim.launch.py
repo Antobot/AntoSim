@@ -4,6 +4,7 @@ import xacro
 import yaml
 
 from ament_index_python.packages import get_package_share_directory
+from antobot_com_postgresql.db_config_loader import get_robot_config
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, GroupAction
@@ -125,7 +126,21 @@ def launch_control_nodes(context, *args, **kwargs):
     return control_nodes
 
 
-
+def dict_to_xacro_args(data_dict, prefix=""):
+    args = {}
+    for key, value in data_dict.items():
+        full_key = f"{prefix}{key}" if prefix else key
+        
+        if isinstance(value, dict):
+            args.update(dict_to_xacro_args(value, prefix=f"{full_key}_"))
+        elif isinstance(value, bool):
+            args[full_key] = str(value).lower()
+        elif value is None:
+            continue
+        else:
+            args[full_key] = str(value)
+    
+    return args
 
 
 ########################################################################
@@ -147,22 +162,26 @@ def generate_launch_description():
     #antobotParse = IncludeLaunchDescription(PythonLaunchDescriptionSource([parseAntobotLaunch]))
 
     pkg_antobot_description = get_package_share_directory('antobot_description')
-    platform_config_path = str(pkg_antobot_description) + "/config/platform_config.yaml"
+    
+    # Load configuration from database
+    packagePath = get_package_share_directory('antobot_description')
+    platform_config_path = os.path.join(packagePath, 'config', 'platform_config.yaml')
+    data = get_robot_config("platform_config", platform_config_path)
 
-    with open(platform_config_path, 'r') as yamlfile:
-        data = yaml.safe_load(yamlfile)
-
-        robot_platform = data['robot_platform']
-        if robot_platform == "ant":
-            model_xacro = 'ant_v4.urdf.xacro'
-        elif robot_platform == "allWheel":
-            model_xacro = 'allWheel.urdf.xacro'
+    robot_platform = data['robot_platform']
+    if robot_platform == "ant":
+        model_xacro = 'ant_v4.urdf.xacro'
+    elif robot_platform == "allWheel":
+        model_xacro = 'allWheel.urdf.xacro'
 
     # Locate your Xacro file
     xacro_file = os.path.join(pkg_antobot_description,'urdf', model_xacro)
 
-    # Process Xacro to URDF
-    doc = xacro.process_file(xacro_file)
+    # Convert database config to xacro arguments
+    xacro_args = dict_to_xacro_args(data)
+    
+    # Process Xacro to URDF with database parameters
+    doc = xacro.process_file(xacro_file, mappings=xacro_args)
     urdf_content = doc.toxml()
 
     # Takes the description and joint angles as inputs and publishes the 3D poses of the robot links
